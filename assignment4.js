@@ -13,5 +13,48 @@
 
 (function() {
   // Magic!
-  console.log('Keepin\'n it clean with an external script!');
+  console.log("hi");
+
+	$("#in").keyup(function() {
+		var input = $(this).val();
+    if (input.length > 0) {
+      console.log(jQuery.type(input));
+		  console.log(input.length);
+      var r = searchString(input,data_arr);
+      console.log(r);
+      var allsugg = "";
+      for (var x=0; x<r.length; x++) {
+        var addsugg = "<li>" + r[x] + "</li>";
+        allsugg = allsugg + addsugg;
+      }
+      document.getElementById("suggestions").innerHTML = allsugg;
+      console.log(allsugg);
+    }
+    else {
+      document.getElementById("suggestions").innerHTML = "";
+    }
+	});
+
+  $.ajax({
+  	url: "http://www.mattbowytz.com/simple_api.json?data=all", 
+  	method: "GET"
+  }).success(function(data) {
+  	interests = data.data.interests;
+  	programming = data.data.programming;
+  	data_arr = interests.concat(programming);
+  	console.log(data_arr);
+  }).fail(function(data) {
+  	console.log(data);
+  })
 })();
+
+function searchString(str, arr) {
+	var retarr = new Array();
+	for (var i=0; i<arr.length; i++) {
+		if (str == arr[i].substring(0,str.length)) {
+      retarr.push(arr[i]);
+    }
+	}
+	return retarr;
+}
+
